@@ -23,4 +23,8 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
+    .button-move {
+        transition: transform 0.2s;
+    }
 </style>

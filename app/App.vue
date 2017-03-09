@@ -3,11 +3,12 @@
         nav.nav.has-shadow: .container
             .nav-left
                 .nav-item \#{{ count }} - 표준편차 {{ groups.length ? groups.stddev : 'Unknown' }}
-        section.section: .container
+        section.section.totoro: .container
             .columns
-                .column: #result.box(:class='groups.length ? "show" : ""')
-                    .columns.is-multiline: .column.is-half(v-for='(g, index) in groups')
-                        group(key='index', :showGrade='showGrade', :index='index', :group='g')
+                .column
+                    transition-group.columns.is-multiline(name='result-group')
+                        .column.is-half(v-for='(g, index) in groups', :key='index')
+                            group(:showGrade='showGrade', :index='index', :group='g')
                 .column.is-one-third: .box
                     .control.is-grouped
                         p.control.is-expanded: input.input(v-on:keyup.enter='addStudent', v-model='name', placeholder='이름')
@@ -105,18 +106,15 @@
 
     section {
         flex: 1 0 auto;
+    }
 
+    section.totoro {
         background-image: url('../totoro.jpg');
         background-repeat: no-repeat;
         background-position: center center;
     }
 
-    #result {
-        opacity: 0;
-        transition: all 2s ease;
-    }
-
-    #result.show {
-        opacity: 1;
+    .result-group-move {
+        transition: transform 1s;
     }
 </style>
