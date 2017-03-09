@@ -2,8 +2,10 @@
     #app
         nav.nav.has-shadow: .container
             .nav-left
-                .nav-item \#{{ count }} - 표준편차 {{ groups.length ? groups.stddev : 'Unknown' }}
-        section.section.totoro: .container
+                .nav-item \#{{ count }} - 표준편차 {{ groups.length ? groups.stddev : '0' }}
+            .nav-right
+                a.nav-item(@click='toggleTotoro') 배경 {{ totoro ? "끄기" : "켜기" }}
+        section.section(:class='totoro ? "totoro" : ""'): .container
             .columns
                 .column
                     transition-group.columns.is-multiline(name='result-group')
@@ -38,7 +40,7 @@
     import grouper from './src/grouper';
 
     const db = low('db');
-    db.defaults({ students: [] }).write();
+    db.defaults({ students: [], totoro: true }).write();
 
     export default {
         name: 'app',
@@ -46,10 +48,11 @@
 
         data: () => ({
             size: 3, name: '', grade: '', showGrade: false,
-            groups: [], students: [], count: 0, level: 20, v: 0
+            groups: [], students: [], count: 0, level: 20, v: 0, totoro: true
         }),
 
         created(){
+            this.totoro = db.get('totoro').value();
             this.students = db.get('students').value();
         },
 
@@ -88,6 +91,10 @@
                     this.groups = this.gg.map(group => group.filter(m => m.name));
                     this.level = this.groups.stddev = this.gg.stddev;
                 })();
+            },
+
+            toggleTotoro(){
+                db.set('totoro', this.totoro = !this.totoro).write();
             }
         }
     };
