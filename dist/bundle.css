@@ -10,7 +10,7 @@
 section {
     flex: 1 0 auto;
 
-    background-image: url(/disttotoro.jpg?48fe9d1b9aaa381eff91550fb3644df4);
+    background-image: url(/dist/totoro.jpg?48fe9d1b9aaa381eff91550fb3644df4);
     background-repeat: no-repeat;
     background-position: center center;
 }
@@ -26,30 +26,30 @@ section {
   font-style: normal;
   font-weight: 100;
   src: local('Noto Sans Korean Thin');
-  src: url(/distNotoSans-Thin.eot?ed7fd4d82bb717d78350ff60a9e6261d);
-  src: url(/distNotoSans-Thin.eot?ed7fd4d82bb717d78350ff60a9e6261d?#iefix) format('embedded-opentype'),
-      url(/distNotoSans-Thin.woff2?5b87b6725168ebf12d4837da4848962b) format('woff2'),
-      url(/distNotoSans-Thin.woff?7adb7d46ce6f8afd982e430b90c52619) format('woff');
+  src: url(/dist/NotoSans-Thin.eot?ed7fd4d82bb717d78350ff60a9e6261d);
+  src: url(/dist/NotoSans-Thin.eot?ed7fd4d82bb717d78350ff60a9e6261d?#iefix) format('embedded-opentype'),
+      url(/dist/NotoSans-Thin.woff2?5b87b6725168ebf12d4837da4848962b) format('woff2'),
+      url(/dist/NotoSans-Thin.woff?7adb7d46ce6f8afd982e430b90c52619) format('woff');
 }
 @font-face {
   font-family: 'Noto Sans Korean';
   font-style: normal;
   font-weight: 400;
   src: local('Noto Sans Korean Light');
-  src: url(/distNotoSans-Light.eot?39bc3dc0347163b6ddda1d24b334371e);
-  src: url(/distNotoSans-Light.eot?39bc3dc0347163b6ddda1d24b334371e?#iefix) format('embedded-opentype'),
-      url(/distNotoSans-Light.woff2?e67b35e51331f8ea136fa956fa4b594c) format('woff2'),
-      url(/distNotoSans-Light.woff?d04dd8702c5cc108a75e99f43ba7fcbb) format('woff');
+  src: url(/dist/NotoSans-Light.eot?39bc3dc0347163b6ddda1d24b334371e);
+  src: url(/dist/NotoSans-Light.eot?39bc3dc0347163b6ddda1d24b334371e?#iefix) format('embedded-opentype'),
+      url(/dist/NotoSans-Light.woff2?e67b35e51331f8ea136fa956fa4b594c) format('woff2'),
+      url(/dist/NotoSans-Light.woff?d04dd8702c5cc108a75e99f43ba7fcbb) format('woff');
 }
 @font-face {
   font-family: 'Noto Sans Korean';
   font-style: normal;
   font-weight: 700;
   src: local('Noto Sans Korean Regular');
-  src: url(/distNotoSans-Regular.eot?0589d1a2545498ab34da041416b4a3a9);
-  src: url(/distNotoSans-Regular.eot?0589d1a2545498ab34da041416b4a3a9?#iefix) format('embedded-opentype'),
-      url(/distNotoSans-Regular.woff2?4e2910267e88d635a5b26172ee62786a) format('woff2'),
-      url(/distNotoSans-Regular.woff?53e1309e4fc9372afba4fd8f872a7aa5) format('woff');
+  src: url(/dist/NotoSans-Regular.eot?0589d1a2545498ab34da041416b4a3a9);
+  src: url(/dist/NotoSans-Regular.eot?0589d1a2545498ab34da041416b4a3a9?#iefix) format('embedded-opentype'),
+      url(/dist/NotoSans-Regular.woff2?4e2910267e88d635a5b26172ee62786a) format('woff2'),
+      url(/dist/NotoSans-Regular.woff?53e1309e4fc9372afba4fd8f872a7aa5) format('woff');
 }
 /*! bulma.io v0.3.2 | MIT License | github.com/jgthms/bulma */
 @-webkit-keyframes spinAround {
