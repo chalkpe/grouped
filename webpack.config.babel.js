@@ -1,11 +1,12 @@
 import path from 'path';
+import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-export default {
+let config = {
     entry: './app/index.js',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js', publicPath: '/grouped/dist/'
+        filename: 'bundle.js', path: path.resolve(__dirname, 'dist'),
+        publicPath: process.env.NODE_ENV === 'development' ? '/dist/' : '/grouped/dist/'
     },
     module: {
         rules: [
@@ -39,7 +40,7 @@ export default {
         ]
     },
     plugins: [
-        new ExtractTextPlugin("bundle.css"),
+        new ExtractTextPlugin("bundle.css")
     ],
     resolve: {
         alias: { 'vue$': 'vue/dist/vue.common.js' }
@@ -51,3 +52,19 @@ export default {
     performance: { hints: false },
     devtool: '#eval-source-map'
 };
+
+if(process.env.NODE_ENV === 'production'){
+    config.devtool = '#source-map';
+    config.plugins = (config.plugins || []).concat([
+        new webpack.DefinePlugin({
+            'process.env': { NODE_ENV: '"production"' }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: { warnings: false }
+        }),
+        new webpack.LoaderOptionsPlugin({ minimize: true })
+    ]);
+}
+
+export default config;
