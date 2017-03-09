@@ -15,7 +15,8 @@
                     .control.is-grouped
                         p.control.is-expanded: input.input(v-on:keyup.enter='addStudent', v-model='name', placeholder='이름')
                         p.control.is-expanded: input.input(v-on:keyup.enter='addStudent', v-model.number='grade', placeholder='성적')
-                        a.button.is-primary(@click='addStudent') 추가
+                        p.control: a.button.is-primary(@click='addStudent') 추가
+                        p.control: a.button.is-primary(@click='importFile') CSV
                     hr
                     p.control: label.checkbox
                         input(v-model='showGrade', type='checkbox')
@@ -31,12 +32,15 @@
 <script>
     import 'noto-sans-kr';
     import 'bulma/css/bulma.css';
+    import 'babel-polyfill';
 
     import Group from './components/Group.vue';
     import Student from './components/Student.vue';
 
-    import 'babel-polyfill';
     import low from 'lowdb';
+    import fileDialog from 'file-dialog/file-dialog.min';
+
+    import csv from './src/csv';
     import grouper from './src/grouper';
 
     const db = low('db');
@@ -95,6 +99,14 @@
 
             toggleTotoro(){
                 db.set('totoro', this.totoro = !this.totoro).write();
+            },
+
+            importFile(){
+                let importer = ([name, grade]) => ({ name, grade: parseFloat(grade) });
+
+                fileDialog({ accept: 'text/csv' })
+                    .then(files => csv(files[0]))
+                    .then(({ data }) => db.set('students', this.students = data.map(importer)).write());
             }
         }
     };
@@ -123,5 +135,9 @@
 
     .result-group-move {
         transition: transform 1s;
+    }
+
+    input[type="file"] {
+        max-width: 100%;
     }
 </style>

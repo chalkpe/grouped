@@ -24,8 +24,10 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "bulma": "^0.3.2",
+    "file-dialog": "0.0.4",
     "lowdb": "^0.15.5",
     "noto-sans-kr": "^0.1.1",
+    "papaparse": "^4.1.4",
     "vue": "^2.2.1"
   },
   "devDependencies": {
