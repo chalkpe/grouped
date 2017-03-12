@@ -1,11 +1,11 @@
 <template lang="pug">
     a.button(@click='$emit("remove")') {{ student.name }}
-        b(v-show='showGrade') &nbsp;({{ student.grade }}점)
+        b(v-show='show') &nbsp;({{ student.grade }}점)
 </template>
 
 <script>
     export default {
-        props: ['student', 'showGrade']
+        props: ['student', 'show']
     }
 </script>
 

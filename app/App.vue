@@ -4,43 +4,30 @@
             .nav-left
                 .nav-item \#{{ count }} - 표준편차 {{ groups.length ? groups.stddev : '0' }}
             .nav-right
-                a.nav-item(@click='toggleTotoro') 배경 {{ totoro ? "끄기" : "켜기" }}
+                a.nav-item: label.checkbox
+                    input(v-model='totoro', type='checkbox', @change='toggleTotoro')
+                    | 배경
+                a.nav-item: label.checkbox
+                    input(v-model='grade', type='checkbox')
+                    | 성적
         section.section(:class='totoro ? "totoro" : ""'): .container
             .columns
                 .column
                     transition-group.columns.is-multiline(name='result-group')
-                        .column.is-half(v-for='(g, index) in groups', :key='index')
-                            group(:showGrade='showGrade', :index='index', :group='g')
-                .column.is-one-third: .box
-                    .control.is-grouped
-                        p.control.is-expanded: input.input(v-on:keyup.enter='addStudent', v-model='name', placeholder='이름')
-                        p.control.is-expanded: input.input(v-on:keyup.enter='addStudent', v-model.number='grade', placeholder='성적')
-                        p.control: a.button.is-primary(@click='addStudent') 추가
-                        p.control: a.button.is-primary(@click='importFile') CSV
-                    hr
-                    p.control: label.checkbox
-                        input(v-model='showGrade', type='checkbox')
-                        | 학생 성적 표시하기
-                    transition-group.block(name='button', tag='div')
-                        student(v-for='(s, index) in students', :key='s.name', :showGrade='showGrade', :student='s', @remove='removeStudent(index)') {{ s.name }}
-                    hr
-                    .control.is-grouped
-                        p.control.is-expanded: input.input(v-model.number='size', type='number', placeholder='한 조에 몇 명?')
-                        a.button.is-primary(@click='makeGroup') 총 {{ students.length }}명 그룹 나누기
+                        group(v-for='(g, index) in groups', :key='index', :index='index', :group='g', :show='grade')
+                .column.is-one-third
+                    dashboard(:students='students', :show='grade', @add='addStudent', @remove='removeStudent', @start='makeGroup')
 </template>
 
 <script>
     import 'noto-sans-kr';
-    import 'bulma/css/bulma.css';
     import 'babel-polyfill';
+    import 'bulma/css/bulma.css';
 
     import Group from './components/Group.vue';
-    import Student from './components/Student.vue';
+    import Dashboard from './layouts/Dashboard.vue';
 
     import low from 'lowdb';
-    import fileDialog from 'file-dialog/file-dialog.min';
-
-    import csv from './src/csv';
     import grouper from './src/grouper';
 
     const db = low('db');
@@ -48,11 +35,12 @@
 
     export default {
         name: 'app',
-        components: { Group, Student },
+        components: { Group, Dashboard },
 
         data: () => ({
-            size: 3, name: '', grade: '', showGrade: false,
-            groups: [], students: [], count: 0, level: 20, v: 0, totoro: true
+            groups: [], students: [],
+            count: 0, level: 20, v: 0,
+            totoro: true, grade: false
         }),
 
         created(){
@@ -61,16 +49,10 @@
         },
 
         methods: {
-            addStudent(){
-                let grade = this.grade;
-                let name = this.name.trim();
+            addStudent(student){
+                if(this.students.find(s => s.name === student.name)) return;
 
-                if(typeof grade !== 'number') return;
-                if(!name || this.students.find(s => name === s.name)) return;
-
-                this.grade = this.name = '';
-                this.students.push({ name, grade });
-
+                this.students.push(student);
                 db.write();
             },
 
@@ -79,15 +61,15 @@
                 db.write();
             },
 
-            makeGroup(g){
-                let v = ++this.v;
+            makeGroup(size){
                 this.count = 0;
+                let g, v = ++this.v;
 
                 (g = () => {
                     this.count++;
                     if(this.v !== v) return;
 
-                    let groups = grouper(this.students, this.size);
+                    let groups = grouper(this.students, size);
                     if(!this.gg || !this.gg.length || groups.stddev < this.gg.stddev) this.gg = groups;
 
                     if(this.gg.stddev >= this.level) return setTimeout(g, 0);
@@ -98,15 +80,7 @@
             },
 
             toggleTotoro(){
-                db.set('totoro', this.totoro = !this.totoro).write();
-            },
-
-            importFile(){
-                let importer = ([name, grade]) => ({ name, grade: parseFloat(grade) });
-
-                fileDialog({ accept: 'text/csv' })
-                    .then(files => csv(files[0]))
-                    .then(({ data }) => db.set('students', this.students = data.map(importer)).write());
+                db.set('totoro', this.totoro).write();
             }
         }
     };
@@ -135,9 +109,5 @@
 
     .result-group-move {
         transition: transform 1s;
-    }
-
-    input[type="file"] {
-        max-width: 100%;
     }
 </style>
