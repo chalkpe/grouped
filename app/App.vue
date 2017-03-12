@@ -16,7 +16,7 @@
                     transition-group.columns.is-multiline(name='result-group')
                         group(v-for='(g, index) in groups', :key='index', :index='index', :group='g', :show='grade')
                 .column.is-one-third
-                    dashboard(:students='students', :show='grade', @add='addStudent', @remove='removeStudent', @start='makeGroup')
+                    dashboard(:students='students', :show='grade', @add='addStudent', @remove='removeStudent', @import='importFile', @start='makeGroup')
 </template>
 
 <script>
@@ -77,6 +77,10 @@
                     this.groups = this.gg.map(group => group.filter(m => m.name));
                     this.level = this.groups.stddev = this.gg.stddev;
                 })();
+            },
+
+            importFile(students){
+                db.set('students', this.students = students).write();
             },
 
             toggleTotoro(){
