@@ -1,5 +1,5 @@
 # grouped
-Create random group
+Group students based on their test score
 
 ## Build
 ```bash
