@@ -1,22 +1,23 @@
 <template lang="pug">
-    #app
+    #app(:class='bg && "totoro"')
         nav.nav.has-shadow: .container
             .nav-left
                 .nav-item \#{{ count }} - 표준편차 {{ groups.length ? groups.stddev : '0' }}
             .nav-right
                 a.nav-item: label.checkbox
-                    input(v-model='totoro', type='checkbox', @change='toggleTotoro')
+                    input(v-model='bg', type='checkbox', @change='toggleBackground')
                     | 배경
                 a.nav-item: label.checkbox
                     input(v-model='grade', type='checkbox')
                     | 성적
-        section.section(:class='totoro ? "totoro" : ""'): .container
-            .columns
-                .column
-                    transition-group.columns.is-multiline(name='result-group')
-                        group(v-for='(g, index) in groups', :key='index', :index='index', :group='g', :show='grade')
-                .column.is-one-third
-                    dashboard(:students='students', :show='grade', @add='addStudent', @remove='removeStudent', @import='importFile', @start='makeGroup')
+        section.section.container: .columns
+            .column
+                transition-group.columns.is-multiline(name='group')
+                    group(v-for='(g, i) in groups', :key='i', :index='i', :group='g', :show='grade')
+            .column.is-one-third
+                dashboard(:students='students', :show='grade',
+                    @add='add', @remove='remove', @import='set',
+                    @create='create', @update='count++')
 </template>
 
 <script>
@@ -28,63 +29,40 @@
     import Dashboard from './layouts/Dashboard.vue';
 
     import low from 'lowdb';
-    import grouper from './src/grouper';
 
     const db = low('db');
-    db.defaults({ students: [], totoro: true }).write();
+    db.defaults({ students: [], bg: true }).write();
 
     export default {
         name: 'app',
         components: { Group, Dashboard },
-
-        data: () => ({
-            groups: [], students: [],
-            count: 0, level: 20, v: 0,
-            totoro: true, grade: false
-        }),
+        data: () => ({ students: [], groups: [], bg: true, grade: false, count: 0 }),
 
         created(){
-            this.totoro = db.get('totoro').value();
+            this.bg = db.get('bg').value();
             this.students = db.get('students').value();
         },
 
         methods: {
-            addStudent(student){
+            add(student){
                 if(this.students.find(s => s.name === student.name)) return;
-
-                this.students.push(student);
-                db.write();
+                this.students.push(student); db.write();
             },
 
-            removeStudent(index){
-                this.students.splice(index, 1);
-                db.write();
+            remove(index){
+                this.students.splice(index, 1); db.write();
             },
 
-            makeGroup(size){
-                this.count = 0;
-                let g, v = ++this.v;
-
-                (g = () => {
-                    this.count++;
-                    if(this.v !== v) return;
-
-                    let groups = grouper(this.students, size);
-                    if(!this.gg || !this.gg.length || groups.stddev < this.gg.stddev) this.gg = groups;
-
-                    if(this.gg.stddev >= this.level) return setTimeout(g, 0);
-
-                    this.groups = this.gg.map(group => group.filter(m => m.name));
-                    this.level = this.groups.stddev = this.gg.stddev;
-                })();
-            },
-
-            importFile(students){
+            set(students){
                 db.set('students', this.students = students).write();
             },
 
-            toggleTotoro(){
-                db.set('totoro', this.totoro).write();
+            create(groups){
+                this.groups = groups;
+            },
+
+            toggleBackground(){
+                db.set('bg', this.bg).write();
             }
         }
     };
@@ -103,15 +81,16 @@
 
     section {
         flex: 1 0 auto;
+        background-color: transparent !important;
     }
 
-    section.totoro {
-        background-image: url('../totoro.jpg');
+    .totoro {
         background-repeat: no-repeat;
         background-position: center center;
+        background-image: url('../totoro.jpg');
     }
 
-    .result-group-move {
+    .group-move {
         transition: transform 1s;
     }
 </style>
