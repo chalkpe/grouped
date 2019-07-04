@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -28,7 +30,8 @@
     "lowdb": "^0.15.5",
     "noto-sans-kr": "^0.1.1",
     "papaparse": "^4.1.4",
-    "vue": "^2.2.1"
+    "vue": "^2.2.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -46,5 +49,6 @@
     "vue-template-compiler": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
-  }
+  },
+  "snyk": true
 }
